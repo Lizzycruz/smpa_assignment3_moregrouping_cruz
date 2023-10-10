@@ -1,21 +1,21 @@
 ---
 title: "R Assignment #3"
-author: "Put Your Name Here"
-date: "`r format(Sys.time(), '%B %d, %Y')`"
+author: "Elizabeth Cruz "
+date: "`10/10/23`"
 format:
   html:
     self-contained: true
 ---
 
 ```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE)
 
 # Load the packages we'll need
-library(tidyverse)
+library(tidyverse) 
 library(lubridate)
 library(readxl)
 library(writexl)
 library(janitor)
+
 
 ```
 
@@ -44,19 +44,24 @@ Write your code using grouping in the chunks below to help answer the following 
 
 ```{r}
 
-
-
+impeach %>% 
+  group_by(for_impeachment) %>% 
+  summarize(n = n())
 
 
 
 ```
 
 2)  Similar to #1 above, using grouping to now break down the Democratic House members by TWO measures: those who are for or against impeachment (as you did above)....and then districts above/below national GDP.  
+
+You haveto  want to make sure that the grouping is done on both columns together, e.g. `group_by(column1, column2)`
   
-You'll want to ensure you do the grouping on both columns together, e.g. `group_by(column1, column2)`
 
 ```{r}
 
+impeach %>% 
+  group_by(for_impeachment, gdp_above_national) %>% 
+  summarize(n = n())
 
 
 
@@ -73,7 +78,9 @@ You'll want to ensure you do the grouping on both columns together, e.g. `group_
 ```{r}
 
 
-
+impeach %>% 
+  group_by(for_impeachment, pct_bachelors_compared_to_national) %>% 
+  summarize(n = n())
 
 
 
@@ -91,7 +98,9 @@ In other words, you want to end up with the calculated mean for what that percen
 
 ```{r}
 
-
+impeach %>% 
+  group_by(for_impeachment) %>% 
+  summarize(mean_pct_bachelor = mean(pct_bachelors))
 
 
 
@@ -106,7 +115,9 @@ The relevant column for that is `trump_percent`.
 
 ```{r}
 
-
+impeach %>% 
+  group_by(for_impeachment) %>% 
+  summarize(mean_trumpvote = mean(trump_percent))
 
 
 
@@ -121,7 +132,13 @@ The relevant column for that is `trump_percent`.
 
 ```{r}
 
-  
+yes <- 
+impeach %>% 
+  filter(for_impeachment == "YES")
+
+yes %>% 
+  group_by(margin_flag_2018) %>% 
+  summarize(n = n())
 
 
 
@@ -133,11 +150,13 @@ The relevant column for that is `trump_percent`.
 
 7)  Come up with another breakdown of your choosing for how you'd like to examine this dataset. Say what you'll look at, and then put the code below to find the answer.
 
+This is looking at the percentage of constituents who are not white in the district.
+
 ```{r}
 
-  
-
-
+  impeach %>% 
+  group_by(for_impeachment) %>% 
+  summarize(mean_pct_nonwhite = mean(pct_nonwhite))
 
 
 
@@ -151,7 +170,10 @@ Use the mutate() function to create two new columns: one that extracts the year 
 
 ```{r}
 
-  
+  impeach <-
+  impeach %>% 
+  mutate(year = substr(date_announced, 0,4),
+         month = substr(date_announced, 6, 7))
 
 
 
@@ -165,7 +187,8 @@ Use the mutate() function to create two new columns: one that extracts the year 
 
 ```{r}
 
-  
+  impeach %>% 
+  group_by(month)
 
 
 
